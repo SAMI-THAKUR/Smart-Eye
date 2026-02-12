@@ -1,68 +1,77 @@
 
 # Smart Eye Project
-A multi-model computer vision pipeline for detecting, classifying, and measuring the depth of dents in images using YOLOv8, and custom ResNet-based models.
 
-## Overview
--   **Detection:** Locates potential dent regions in the input image using an object detection model.
+A multi-stage computer vision pipeline for detecting surface damage (dents and scratches), estimating dent depth, extracting geometric features, and generating structured repair recommendations using deep learning and LLM-based reasoning.
+
+----------
+
+## 🚀 Overview
+
+Smart Eye is designed as an intelligent surface inspection assistant that goes beyond simple detection. The system performs:
+
+-   **Damage Detection** – Detects dents and scratches using YOLO.
     
--   **Classification:** Validates true dents versus false positives using a ResNet-based classifier.
+-   **Geometric Feature Extraction** – Computes measurable characteristics from bounding boxes.
     
--   **Depth Estimation:** Predicts dent depth in millimeters using a ResNet-based regression model.
+-   **Dent Depth Estimation** – Predicts dent depth in millimeters using a ResNet-based regression model.
+    
+-   **Multi-Damage Aggregation** – Structures all detected damage into a unified geometry report.
+    
+-   **LLM-Based Repair Recommendation (Optional)** – Generates structured, conservative repair suggestions based strictly on geometric data.
 
 
-| **Stage** | **Model Used** | **Purpose** | **Input** | **Output** |
-|---------|---------------|------------|----------|-----------|
-| Dent Detection | YOLOv8 (Ultralytics) | Detects and localizes potential dent regions | Full car image (RGB) | Bounding boxes (ROIs) of candidate dents |
-| Auxiliary Feature Extraction | Classical CV (OpenCV) | Extracts physics-guided surface cues | Cropped ROI image | Brightness, gradient, specular, shading features |
-| Dent Validation | ResNet-18 + Auxiliary Feature Fusion | Classifies real dents vs reflections | Cropped ROI image + auxiliary features | Dent probability / Binary decision (Dent or Not Dent) |
-| Dent Depth Estimation | ResNet-18 Regression Network | Predicts dent depth | Validated dent ROI image | Dent depth (mm) ||
+## 🏗 Pipeline Stages
 
-## Datasets
-
-This project uses **three separate datasets**, each dedicated to a specific stage of the Smart Eye pipeline.  
-All datasets are curated to match the task requirements of detection, classification, and depth estimation.
+| Stage | Model / Method Used | Purpose | Input | Output |
+|--------|---------------------|----------|--------|--------|
+| **Damage Detection** | YOLO (Ultralytics) | Detects and localizes dents and scratches | Full RGB image | Bounding boxes, class labels (dent/scratch), confidence scores |
+| **Geometric Feature Extraction** | Bounding box computation | Computes measurable geometric features | Detected bounding boxes | Width, height, area (px), aspect ratio |
+| **Dent Depth Estimation** | ResNet-based Regression Model (`predict_depth`) | Estimates dent depth in millimeters | Cropped dent ROI image | Estimated dent depth (mm) |
+| **Damage Aggregation** | Structured data assembly (Python dict) | Organizes all damage information | Per-damage geometry + depth | Structured `damage_list` |
+| **Repair Recommendation** | LLM with structured output schema | Generates geometry-based conservative repair strategy | Structured damage report | Detailed repair recommendations + prioritization |
 
 ---
 
-### 1. Dent Detection Dataset (YOLOv8)
+## 📂 Datasets
 
-- **Purpose:** Train the YOLOv8 model to detect and localize dent regions in car images.
-- **Annotations:** Bounding boxes around visible dents.
-- **Platform:** Roboflow
-- **Link:**  
-  https://app.roboflow.com/nishant-gosavi-vnvdz/my-first-project-en9if/11
+This project uses separate datasets dedicated to specific stages of the Smart Eye pipeline.  
+Each dataset is curated to match the requirements of detection and depth estimation tasks.
+
+---
+
+### 1️⃣ Dent & Scratch Detection Dataset (YOLO)
+
+**Purpose:**  
+Train the YOLO model to detect and localize dent and scratch regions in images.
+
+**Annotations:**  
+Bounding boxes around visible dents and scratches
+
+**Platform:**  
+Roboflow
+
+**Link:**  
+https://universe.roboflow.com/ali-tl4zm/dent-and-scratch/browse?queryText=&pageSize=50&startingIndex=0&browseQuery=true
 
 **Usage:**  
-Used exclusively by the **dent detection stage** to generate high-recall Regions of Interest (ROIs).
+Used exclusively by the damage detection stage to generate high-recall Regions of Interest (ROIs).
 
 ---
 
-### 2. Dent Validation Dataset (0 / 1 Classification)
+### 2️⃣ Dent Depth Prediction Dataset
 
-- **Purpose:** Train the ResNet-based classifier to distinguish **real dents (1)** from **false positives (0)** such as reflections and lighting artifacts.
-- **Data Format:** Cropped dent-like regions with binary labels.
-- **Link:**  
-  https://drive.google.com/drive/folders/1LsdV9Ma3HaZ_TtlLmad65DeWtKLofMyW?usp=sharing
+**Purpose:**  
+Train the regression model to predict dent depth in millimeters.
+
+**Data Format:**  
+Cropped dent images paired with corresponding numerical depth values.
+
+**Link:**  
+https://drive.google.com/drive/folders/1470SzHxH2PjpUt1VoUHjDFwMWvePnGyF?usp=sharing
 
 **Usage:**  
-Used by the **dent validation stage** to filter invalid detections before depth estimation.
+Used by the depth estimation stage to quantify dent severity.
 
----
-
-### 3. Dent Depth Prediction Dataset
-
-- **Purpose:** Train the regression model to predict **dent depth in millimeters**.
-- **Data Format:** Cropped dent images with corresponding numerical depth values.
-- **Link:**  
-  https://drive.google.com/drive/folders/1470SzHxH2PjpUt1VoUHjDFwMWvePnGyF?usp=sharing
-
-**Usage:**  
-Used by the **depth estimation stage** to quantify dent severity.
-
----
-
-### Dataset Design Insight
-> *Each dataset is task-specific, enabling modular training and preventing error propagation across stages.*
 
 
 ## Setup Instructions
@@ -106,9 +115,8 @@ pip install -r requirements.txt
 Place these pre-trained model files in your project root directory:
 ```
 project/
-├── (Model_1)Smart_Eye_dent_detection_weights.pt         # YOLOv8 dent detection weights
-├── (Model_2)Smart_Eye_dent_0_1_weights.pth         # Dent classification model weights
-├── (Model_3)Smart_Eye_dent_depth_weights.pth       # Depth estimation model weights
-└── (Model_3)_scaling_weights.pkl       # Scaler for depth predictions
+├── (Model_1)_dent_&_scratch_detection_yoloV11.pt         # YOLOv8 dent detection weights
+├── (Model_2)Smart_Eye_dent_depth_weights.pth       # Depth estimation model weights
+└── (Model_2)_scaling_weights.pkl       # Scaler for depth predictions
 ```
 
