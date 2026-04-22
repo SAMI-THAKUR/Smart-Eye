@@ -1,0 +1,132 @@
+{
+  "session_id": "SE-2026-0420-FCD5",
+  "report_date": "2026-04-20T09:06:13.620385+00:00",
+  "location": "UNKNOWN",
+  "aircraft": {
+    "registration": "UNKNOWN",
+    "type": "UNKNOWN",
+    "airline": "UNKNOWN"
+  },
+  "bird_strike_detected": {
+    "detected": false,
+    "confidence": null,
+    "affected_zones": [],
+    "notes": "Bird-strike analysis not performed in video pipeline."
+  },
+  "damages": [
+    {
+      "damage_id": "D0",
+      "damage_type": "scratch",
+      "description": "Scratch, width 171 px, height 114 px, area 19,494 px², aspect ratio 1.5, estimated depth 0 mm (surface only).",
+      "detailed_description": "Low – no crack initiation risk, no edge distance concerns. Superficial surface defect with no measurable depth; dimensions are small to moderate and do not affect structural thickness.",
+      "location": "Detected via video frame analysis",
+      "dimensions": {
+        "width": "171",
+        "height": "114",
+        "depth": "0",
+        "unit": "px/mm (width & height in px, depth in mm)"
+      },
+      "depth_estimate": {
+        "level": "surface",
+        "detail": "Surface-level deformation only. No through-thickness penetration."
+      },
+      "downtime_estimate": {
+        "min_hours": 6,
+        "max_hours": 12,
+        "notes": "Prompt repair required. Temporary protection if deferred.",
+        "unit": "hours"
+      },
+      "severity": "high",
+      "repair_recommendations": [
+        {
+          "confidence": 0.9,
+          "text": "Superficial surface defect with no measurable depth; dimensions are small to moderate and do not affect structural thickness."
+        }
+      ]
+    },
+    {
+      "damage_id": "D1",
+      "damage_type": "dent",
+      "description": "Dent, width 177 px, height 170 px, area 30,090 px², aspect ratio 1.04 (near‑circular), estimated depth 1.57 mm.",
+      "detailed_description": "Medium – potential for surface distortion if left unrepaired; low crack initiation risk given shallow depth. Localized dent with depth ~1.5 mm; size moderate but depth remains shallow enough for cold‑working without compromising skin thickness.",
+      "location": "Detected via video frame analysis",
+      "dimensions": {
+        "width": "177",
+        "height": "170",
+        "depth": "1.57",
+        "unit": "px/mm (width & height in px, depth in mm)"
+      },
+      "depth_estimate": {
+        "level": "bare_metal",
+        "detail": "Full paint and primer removal. Bare substrate exposed."
+      },
+      "downtime_estimate": {
+        "min_hours": 6,
+        "max_hours": 12,
+        "notes": "Prompt repair required. Temporary protection if deferred.",
+        "unit": "hours"
+      },
+      "severity": "high",
+      "repair_recommendations": [
+        {
+          "confidence": 0.9,
+          "text": "Localized dent with depth ~1.5 mm; size moderate but depth remains shallow enough for cold‑working without compromising skin thickness."
+        }
+      ]
+    },
+    {
+      "damage_id": "D2",
+      "damage_type": "dent",
+      "description": "Dent, width 107 px, height 70 px, area 7,490 px², aspect ratio 1.53 (elongated), estimated depth 1.55 mm.",
+      "detailed_description": "Medium – similar to D1 but lower impact due to smaller area. Smaller dent with similar shallow depth; geometry permits cold‑working or local repair without affecting surrounding structure.",
+      "location": "Detected via video frame analysis",
+      "dimensions": {
+        "width": "107",
+        "height": "70",
+        "depth": "1.55",
+        "unit": "px/mm (width & height in px, depth in mm)"
+      },
+      "depth_estimate": {
+        "level": "bare_metal",
+        "detail": "Full paint and primer removal. Bare substrate exposed."
+      },
+      "downtime_estimate": {
+        "min_hours": 6,
+        "max_hours": 12,
+        "notes": "Prompt repair required. Temporary protection if deferred.",
+        "unit": "hours"
+      },
+      "severity": "high",
+      "repair_recommendations": [
+        {
+          "confidence": 0.9,
+          "text": "Smaller dent with similar shallow depth; geometry permits cold‑working or local repair without affecting surrounding structure."
+        }
+      ]
+    }
+  ],
+  "overall_repair_strategy": {
+    "general_repair_approach": "Perform blending on the scratch (D0) and cold‑working on both dents (D1, D2). No structural doublers or patches are required.",
+    "interaction_between_damages": "No spatial overlap or clustering; each damage is isolated.",
+    "inspection_requirements": "Visual inspection after repair to confirm surface continuity; nondestructive testing (e.g., eddy‑current) optional for dents if any doubt about hidden cracks.",
+    "structural_risk_level": "Moderate",
+    "engineering_review_required": false
+  },
+  "prioritization": [
+    {
+      "damage_id": "D1",
+      "priority_rank": 1,
+      "justification": "Largest area dent with depth ~1.5 mm; highest potential for surface distortion."
+    },
+    {
+      "damage_id": "D2",
+      "priority_rank": 2,
+      "justification": "Smaller dent but same depth; secondary priority."
+    },
+    {
+      "damage_id": "D0",
+      "priority_rank": 3,
+      "justification": "Superficial scratch; lowest priority."
+    }
+  ]
+}
